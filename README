@@ -6,3 +6,5 @@ Semantic Editor Combinators as described by Conal Elliott
 and Template Haskell support for automatically creating semantic 
 editors from Algebraic Data Types
 
+In Essence every function of the form '(a -> b) -> a -> b' is an semantic editor.
+
