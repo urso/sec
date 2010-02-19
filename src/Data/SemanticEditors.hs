@@ -5,7 +5,8 @@ module Data.SemanticEditors(result, first, second, each, set, argument,
   where
 
 import Control.Applicative
-import Control.Arrow (first, second)
+import Control.Arrow (first, second, left, right)
+import Control.Monad (liftM)
 import Data.Char (toUpper)
 import Data.Maybe (isJust, fromJust, maybe)
 import Language.Haskell.TH.Syntax
@@ -23,14 +24,6 @@ each = fmap
 --  for example '(first.set) 1' will set the first value of a tuple to 1
 set :: a -> b -> a
 set = const
-
--- |Semantic editor for 'Left' values of type 'Either'
-left :: (a -> a') -> Either a b -> Either a' b
-left f = either (Left . f) (Right . id)
-
--- |Semantic editor for 'Right' values of type 'Either'
-right ::  (b -> b') -> Either a b -> Either a b'
-right f = either (Left . id) (Right . f)
 
 -- |Semantic editor for Maybe
 just ::  (a -> b) -> Maybe a -> Maybe b
