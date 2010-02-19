@@ -1,6 +1,7 @@
 
 module Data.SemanticEditors(result, first, second, each, set, argument, 
-                            left, right, ioref, maybe, just, monad, applicative,
+                            left, right, ioref, maybe, just, monad, bind,
+                            applicative,
                             mkEditors, mkEditor) 
   where
 
@@ -32,6 +33,10 @@ just = monad
 -- |Semantic Editor Combinator for monads
 monad :: Monad m => (a -> b) -> m a -> m b
 monad = liftM -- (>>= return . f)
+
+-- |Semantic Editor Combinator for monadicaly transforming a monadic value
+bind :: Monad m => (a -> m b) -> m a -> m b
+bind f = (>>= f)
 
 -- |Semantic Editor Combinator for applicatives
 applicative :: Applicative f => (a -> b) -> f a -> f b
