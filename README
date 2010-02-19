@@ -4,9 +4,10 @@ Semantic Editor Combinators
 Semantic Editor Combinators as described by Conal Elliott
 (See: <http://conal.net/blog/posts/semantic-editor-combinators/>)
 and Template Haskell support for automatically creating semantic 
-editors from Algebraic Data Types
+editor combinators from Algebraic Data Types
 
-In Essence every function of the form '(a -> b) -> a -> b' is an semantic editor.
+In Essence every function of the form '(a -> b) -> a -> b' is an semantic editor combinator 
+or more specifically lifter.
 
 Installation
 ============
@@ -22,5 +23,5 @@ Installation
     wget http://github.com/urso/sec/zipball/master
    
 2.) In sec-directory install using cabal:
-cabal install
+    $ cabal install
 

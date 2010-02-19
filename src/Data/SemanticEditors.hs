@@ -12,11 +12,11 @@ import Data.Maybe (isJust, fromJust, maybe)
 import Language.Haskell.TH.Syntax
 import Data.IORef
 
--- |Semantic editor on the result of an unary function
+-- |Semantic Editor Combinator on the result of an unary function
 result :: (b -> b') -> ((a -> b) -> (a -> b'))
 result =  (.)
 
--- |Semantic editor on each value of a list
+-- |Semantic Editor Combinator on each value of a list
 each :: (a -> b) -> ([a] -> [b])
 each = fmap
 
@@ -25,19 +25,19 @@ each = fmap
 set :: a -> b -> a
 set = const
 
--- |Semantic editor for Maybe
+-- |Semantic Editor Combinator for Maybe
 just ::  (a -> b) -> Maybe a -> Maybe b
 just = monad
 
--- |Semantic editor for monads
+-- |Semantic Editor Combinator for monads
 monad :: Monad m => (a -> b) -> m a -> m b
 monad = liftM -- (>>= return . f)
 
--- |Semantic editor for applicatives
+-- |Semantic Editor Combinator for applicatives
 applicative :: Applicative f => (a -> b) -> f a -> f b
 applicative = fmap
 
--- |Semantic editor on argument of an unary function
+-- |Semantic Editor Combinator on argument of an unary function
 argument :: (a' -> a) -> ((a -> b) -> (a' -> b))
 argument = flip (.)
 
@@ -47,11 +47,12 @@ ioref = flip modifyIORef
 infix 1 <.> -- chosen arbitrarily
 f <.> g = (f <$>) . g
 
--- |mkEditors creates Semantic Editors for each data type given. More information see mkEditor
+-- |mkEditors creates Semantic Editor Combinators for each data type given. 
+--  More information see mkEditor
 mkEditors :: [Name] -> Q [Dec]
 mkEditors = concat <.> mapM mkEditor
 
--- |mkEditor creates Semantic editors for each named field in a given data type by
+-- |mkEditor creates Semantic Editor Combinators for each named field in a given data type by
 --  appending the fields name (first letter is converted to uppercase) to the name \"edit\".
 --  If a fields name starts with an underscore \'_\' no editor will be generated
 --
@@ -59,7 +60,7 @@ mkEditors = concat <.> mapM mkEditor
 --
 -- >  data Person = Person { age :: Integer, name :: String, _sex :: String }
 --
---  will generate the editors editAge and editName:
+--  will generate the lifters  editAge and editName:
 --
 -- @
 --    editAge  f p = p { age = f (age p) }

@@ -3,7 +3,7 @@ Version:             0.0.1
 Description:         Semantic Editor Combinators as described by Conal Elliott
                      (See: <http://conal.net/blog/posts/semantic-editor-combinators/>)
                      and Template Haskell support for automatically creating semantic 
-                     editors from Algebraic Data Types
+                     editor combinators from Algebraic Data Types
 License:             BSD3
 license-file:        LICENSE
 Author:              Steffen Siering
