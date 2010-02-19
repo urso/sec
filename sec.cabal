@@ -1,0 +1,19 @@
+Name:                sec
+Version:             0.0.1
+Description:         Semantic Editor Combinators as described by Conal Elliott
+                     (See: <http://conal.net/blog/posts/semantic-editor-combinators/>)
+                     and Template Haskell support for automatically creating semantic 
+                     editors from Algebraic Data Types
+License:             BSD3
+license-file:        LICENSE
+Author:              Steffen Siering
+Maintainer:          steffen.siering@gmail.com
+Build-Type:          Simple
+cabal-version:       >= 1.6
+
+library
+  hs-source-dirs:    src
+  exposed-modules:   Data.SemanticEditors
+  build-depends:     base >= 3 && < 5,
+                     template-haskell == 2.4.*
+
