@@ -32,6 +32,14 @@ left f = either (Left . f) (Right . id)
 right ::  (b -> b') -> Either a b -> Either a b'
 right f = either (Left . id) (Right . f)
 
+-- |Semantic editor for Maybe
+just ::  (a -> b) -> Maybe a -> Maybe b
+just = monad
+
+-- |Semantic editor for monads
+monad :: Monad m => (a -> b) -> m a -> m b
+monad f = (>>= return . f)
+
 -- |Semantic editor on argument of an unary function
 argument :: (a' -> a) -> ((a -> b) -> (a' -> b))
 argument = flip (.)
