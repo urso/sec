@@ -1,6 +1,6 @@
 
 module Data.SemanticEditors(result, first, second, each, set, argument, 
-                            left, right, ioref, maybe,
+                            left, right, ioref, maybe, just, monad, applicative,
                             mkEditors, mkEditor) 
   where
 
@@ -31,7 +31,11 @@ just = monad
 
 -- |Semantic editor for monads
 monad :: Monad m => (a -> b) -> m a -> m b
-monad f = (>>= return . f)
+monad = liftM -- (>>= return . f)
+
+-- |Semantic editor for applicatives
+applicative :: Applicative f => (a -> b) -> f a -> f b
+applicative = fmap
 
 -- |Semantic editor on argument of an unary function
 argument :: (a' -> a) -> ((a -> b) -> (a' -> b))
