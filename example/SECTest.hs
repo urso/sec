@@ -5,10 +5,11 @@
 module SECTest where
 
 import Data.SemanticEditors
+import qualified Data.SemanticEditors as S
 
-type Name = String
-type Street = String
-type City = String
+type Name    = String
+type Street  = String
+type City    = String
 type ZipCode = Int
 
 data Person = Person
@@ -25,22 +26,22 @@ data Address = Address
     }
   deriving(Show)
 
-mkEditors [''Person, ''Address]
+$(mkEditors [''Person, ''Address])
 
 setAge ::  Int -> Person -> Person
-setAge     = editAge.set
+setAge = editAge.set
 
 setName ::  Name -> Person -> Person
-setName    = editName.set
+setName = editName.set
 
 setZipCode ::  ZipCode -> Person -> Person
 setZipCode = editAddress.editZipCode.set
 
 setStreet ::  Street -> Person -> Person
-setStreet  = editAddress.editStreet.set
+setStreet = editAddress.editStreet.set
 
 setCity ::  City -> Person -> Person
-setCity    = editAddress.editCity.set
+setCity = editAddress.editCity.set
 
 joe ::  Person
 joe = Person 24 "joe" $ Address "any street" "LA" 12345
@@ -53,4 +54,36 @@ couple = [joe, mary]
 
 moveTogether ::  Address -> [Person] -> [Person]
 moveTogether = each.editAddress.set
+
+data Color = Red | Green | Blue
+  deriving(Show)
+
+$(mkConstrTests [''Color])
+
+red2Green = (editIf isRed.set) Green
+
+data Expr a = Add a a | Mul a a
+$(mkConstrTests [''Expr])
+
+data Company = C { company :: Name
+                 , departments :: [Dept]
+                 }
+data Dept = D { deptName :: Name
+              , manager :: Manager
+              , employees :: [Employee]
+              }
+data Employee = E { person :: Person
+                  , salary :: Salary
+                  }
+type Manager = Employee
+type Salary = Float
+
+$(mkEditors [''Company, ''Dept, ''Employee])
+
+withEmployeeSalariesOfDept :: Name -> (Salary -> Salary) -> Company -> Company
+withEmployeeSalariesOfDept d = editDepartments.each.editIf isDept.editEmployees.each.editSalary
+  where isDept x = deptName x == d
+
+incEmployeeSalariesOfDept :: Name -> Float -> Company -> Company
+incEmployeeSalariesOfDept d percent = withEmployeeSalariesOfDept d (* (1 + percent/100))
 
