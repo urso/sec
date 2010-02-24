@@ -1,8 +1,8 @@
 
-module Data.SemanticEditors(result, first, second, each, set, argument, 
+module Data.SemanticEditors(result, first, second, each, editIf, set, argument, 
                             left, right, ioref, maybe, just, monad, bind,
                             applicative,
-                            mkEditors, mkEditor) 
+                            mkEditors, mkEditor, mkConstrTests) 
   where
 
 import Control.Applicative
@@ -48,6 +48,11 @@ argument = flip (.)
 
 ioref ::  (a -> a) -> IORef a -> IO ()
 ioref = flip modifyIORef 
+
+-- |Semantic Editor Combinator applying the given function only when the given predicate
+--  yields true for an input value.
+editIf :: (a -> Bool) -> (a -> a) -> (a -> a)
+editIf p f a = if p a then f a else a
 
 infix 1 <.> -- chosen arbitrarily
 f <.> g = (f <$>) . g
@@ -96,4 +101,46 @@ mkEditor' (name, _, _) = case nameBase name of
                              AppE (VarE (mkName "f")) 
                                   (AppE (VarE name) (VarE $ mkName "r")))
                            ]) []]
+
+-- |Template Haskell function for automatically creating predicates testing the constructors of a 
+--  given data type.
+--  for example:
+--
+-- @
+--   data Color = Red | Green | Blue
+--  $(mkConstrTests [''Color])
+-- @
+  --
+--  will generate the following functions:
+--
+-- @
+--   isRed Red     = True
+--   isRed _       = False
+--   isGreen Green = True
+--   isGreen _     = False
+--   isBlue Blue   = True
+--   isBlue _      = False
+-- @
+--
+mkConstrTests :: [Name] -> Q [Dec]
+mkConstrTests = concat <.> mapM mk 
+  where
+    mk name = do
+      i <- reify name
+      map fromJust . filter isJust <.> mapM mkPredicate $
+        case i of
+          TyConI (DataD _ _ _ cs _) -> cs
+          _ -> []
+
+    mkPredicate (NormalC name ts) = Just <$> mkPredicate' name (length ts)
+    mkPredicate (RecC name ts)   = Just <$> mkPredicate' name (length ts)
+    mkPredicate _                = return Nothing
+
+    mkPredicate' name argc = return $
+      FunD (predName name)
+        [ Clause [ConP name $ replicate argc WildP] (NormalB $ ConE (mkName "True")) []
+        , Clause [WildP] (NormalB $ ConE (mkName "False")) []
+        ]
+
+    predName name = mkName ("is" ++ nameBase name)
 
