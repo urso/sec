@@ -15,5 +15,5 @@ library
   hs-source-dirs:    src
   exposed-modules:   Data.SemanticEditors
   build-depends:     base >= 3 && < 5,
-                     template-haskell == 2.4.*
+                     template-haskell == 2.*
 
