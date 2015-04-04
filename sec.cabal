@@ -1,5 +1,5 @@
 Name:                sec
-Version:             0.0.1
+Version:             0.1.0
 Description:         Semantic Editor Combinators as described by Conal Elliott
                      (See: <http://conal.net/blog/posts/semantic-editor-combinators/>)
                      and Template Haskell support for automatically creating semantic 
@@ -14,6 +14,5 @@ cabal-version:       >= 1.6
 library
   hs-source-dirs:    src
   exposed-modules:   Data.SemanticEditors
-  build-depends:     base >= 3 && < 5,
-                     template-haskell == 2.*
-
+  build-depends:     base >= 3 && < 5
+  ghc-options:       -Wall

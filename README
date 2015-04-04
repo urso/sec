@@ -3,8 +3,6 @@ Semantic Editor Combinators
 
 Semantic Editor Combinators as described by Conal Elliott
 (See: <http://conal.net/blog/posts/semantic-editor-combinators/>)
-and Template Haskell support for automatically creating semantic 
-editor combinators from Algebraic Data Types
 
 Installation
 ============
@@ -18,7 +16,6 @@ Installation
 
     # or download zip:
     wget http://github.com/urso/sec/zipball/master
-   
+
 2.) In sec-directory install using cabal:
     $ cabal install
-
